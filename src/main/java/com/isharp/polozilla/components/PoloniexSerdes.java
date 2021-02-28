@@ -2,13 +2,14 @@ package com.isharp.polozilla.components;
 
 import com.google.gson.GsonBuilder;
 
-import com.isharp.polozilla.vo.Capture;
-import com.isharp.polozilla.vo.PoloCaptureWindow;
-import com.isharp.polozilla.vo.PoloSnapKey;
-import com.isharp.polozilla.vo.PoloWebsockMsg;
+import com.isharp.polozilla.vo.*;
 import org.apache.kafka.common.serialization.Deserializer;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.serialization.Serializer;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.TimeZone;
 
 public class PoloniexSerdes {
     static Deserializer<PoloWebsockMsg> rabbitMqDeser = new Deserializer<PoloWebsockMsg>() {
@@ -40,9 +41,6 @@ public class PoloniexSerdes {
     }
 
 
-
-
-
     static final class GsonSerialiser<T> implements  Serializer<T>{
         @Override
         public byte[] serialize(String s, T t) {
@@ -71,6 +69,14 @@ public class PoloniexSerdes {
 
     public static final Serdes.WrapperSerde<PoloCaptureWindow> captureWindow = new GsonSerde<>(PoloCaptureWindow.class);
     public static final Serdes.WrapperSerde<Capture> capture = new GsonSerde<>(Capture.class);
-    public static final Serdes.WrapperSerde<PoloSnapKey> snapKey = new GsonSerde<>(PoloSnapKey.class);
+    public static final Serdes.WrapperSerde<CaptureWindowKey> captureWindowKey = new GsonSerde<>(CaptureWindowKey.class);
+    public static final Serdes.WrapperSerde<Snap> snap = new GsonSerde<>(Snap.class);
+    public static final Serdes.WrapperSerde<KeyedPoloCaptureWindow> keyedPoloCaptureWindow = new GsonSerde<>(KeyedPoloCaptureWindow.class);
+
+    public static LocalDateTime toLdTime(long timestamp){
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp), TimeZone.getTimeZone("UTC").toZoneId());
+    }
+
+
 
 }

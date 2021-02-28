@@ -1,4 +1,4 @@
-package com.isharp.polozilla.topologies.window;
+package com.isharp.polozilla.topologies.snap;
 
 import java.time.Duration;
 
@@ -7,18 +7,20 @@ public class Config {
     private final String outputTopic;
     private final Duration timeWindow;
     private final Duration gracePeriod;
-    private final String aggregationName;
 
-    public Config(String inputTopic, String windowedSecsOutputTopic, Duration timeWindow, Duration gracePeriod, String aggregationName) {
+    public Config(String inputTopic, String outputTopic, Duration timeWindow, Duration gracePeriod) {
         this.inputTopic = inputTopic;
-        this.outputTopic = windowedSecsOutputTopic;
+        this.outputTopic = outputTopic;
         this.timeWindow = timeWindow;
         this.gracePeriod = gracePeriod;
-        this.aggregationName = aggregationName;
     }
 
     public String getInputTopic() {
         return inputTopic;
+    }
+
+    public String getOutputTopic() {
+        return outputTopic;
     }
 
     public Duration getTimeWindow() {
@@ -28,16 +30,4 @@ public class Config {
     public Duration getGracePeriod() {
         return gracePeriod;
     }
-
-    public String getAggregationName() {
-        return aggregationName;
-    }
-
-    public String getOutputTopic() {
-        return outputTopic;
-    }
-
-
-
-
 }

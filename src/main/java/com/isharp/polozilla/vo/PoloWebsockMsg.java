@@ -34,12 +34,14 @@ public class PoloWebsockMsg {
             JsonReader jsonReader = new JsonReader(new StringReader(inputRecord));
             jsonReader.beginArray();
             int i = jsonReader.nextInt();
-            jsonReader.nextNull();
             List<PoloTick> ticks = Lists.newArrayList();
-            while (jsonReader.hasNext()) {
-                jsonReader.beginArray();
-                ticks.add(PoloTick.fromReader(jsonReader));
-                jsonReader.endArray();
+            if (i==1002){
+                jsonReader.nextNull();
+                while (jsonReader.hasNext()) {
+                    jsonReader.beginArray();
+                    ticks.add(PoloTick.fromReader(jsonReader));
+                    jsonReader.endArray();
+                }
             }
             return new PoloWebsockMsg(i,ticks);
         } catch (IOException e) {

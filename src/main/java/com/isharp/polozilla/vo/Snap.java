@@ -1,19 +1,37 @@
 package com.isharp.polozilla.vo;
 
-import java.util.Stack;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 
 public class Snap {
-    private Stack<Capture> captures = new Stack<>();
 
-    public Stack<Capture> getCaptures() {
-        return captures;
+    private String snapTime;
+    private  Map<String, List<Capture>> capture= Maps.newHashMap();
+
+
+    public String getSnapTime() {
+        return snapTime;
     }
 
-    public void setCaptures(Stack<Capture> captures) {
-        this.captures = captures;
+    public void setSnapTime(String snapTime) {
+        this.snapTime = snapTime;
     }
-    public Snap addCapture(Capture c){
-        captures.push(c);
+    public Snap add(String asset,PoloCaptureWindow poloCaptureWindow){
+        List<Capture> captures = capture.computeIfAbsent(asset,(key)-> Lists.newArrayList());
+        captures.addAll(poloCaptureWindow.getCaptures());
         return this;
+    }
+
+    public Map<String, List<Capture>> getCapture() {
+        return capture;
+    }
+
+    public void setCapture(Map<String, List<Capture>> capture) {
+        this.capture = capture;
     }
 }
