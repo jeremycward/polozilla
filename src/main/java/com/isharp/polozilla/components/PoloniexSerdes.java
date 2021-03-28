@@ -26,9 +26,6 @@ public class PoloniexSerdes {
         return trimmed;
     }
 
-
-
-
     static final class PoloWebSockSerde extends Serdes.WrapperSerde<PoloWebsockMsg>{
         public PoloWebSockSerde() {
             super(new Serializer<PoloWebsockMsg>() {
