@@ -69,14 +69,15 @@ public class WebsocketClientEndpoint {
     Session userSession = null;
 
 
+
     public WebsocketClientEndpoint() {
     }
     @PostConstruct
     public void startSubscription(){
         Properties kafkaSystemConfig = new Properties();
         kafkaSystemConfig.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG,   bootstrapAddress);
-        private String bootstrapAddress;
-);
+
+
         kafkaSystemConfig.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         kafkaSystemConfig.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 
