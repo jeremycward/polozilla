@@ -35,7 +35,7 @@ public class PoloWebsockMsg {
             jsonReader.beginArray();
             int i = jsonReader.nextInt();
             List<PoloTick> ticks = Lists.newArrayList();
-            if (i==1002){
+            if (i==1002 &&  inputRecord.length()>50){
                 jsonReader.nextNull();
                 while (jsonReader.hasNext()) {
                     jsonReader.beginArray();

@@ -23,6 +23,7 @@ import java.util.List;
 
 import static com.isharp.polozilla.topologies.TopologyTestUtil.FEB_2_2021_17_30_Instant;
 import static com.isharp.polozilla.topologies.TopologyTestUtil.receivingFrom;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -47,7 +48,7 @@ public class SnapRouteTest {
          inputTopic=driver.createInputTopic(INPUT_TOPIC, Serdes.String().serializer(),PoloniexSerdes.keyedPoloCaptureWindow.serializer() , FEB_2_2021_17_30_Instant,Duration.ofMillis(0));
         windowedMinsTestOutput =
         driver.createOutputTopic(OUTPUT_TOPIC,
-                WindowedSerdes.sessionWindowedSerdeFrom(String.class).deserializer(),
+                WindowedSerdes.timeWindowedSerdeFrom(String.class).deserializer(),
                                          PoloniexSerdes.snap.deserializer());
         priceSender = new TopologyTestUtil.TimedDataSender(driver,inputTopic,TopologyTestUtil.FRI_8_JAN_2021_17_30_ld);
     }
@@ -90,7 +91,7 @@ public class SnapRouteTest {
         assertThat(results.get(0).getValue().getCapture().get("gbpusd").get(14).getValue(),is(1.002d));
 
 
-        //assertThat(results.get(0).getKey().key(),is("2021-02-20:1730"));
+        assertThat(results.get(0).getKey().key(),containsString("2021-02-20:1730"));
     }
 
 

@@ -28,7 +28,8 @@ public class RawDataTransformerSupplier implements TransformerSupplier<String, S
         @Override
         public KeyValue<Long,PoloWebsockMsg> transform(String key, String value) {
             String trimmed = PoloniexSerdes.trimToJsonStart(new String(value));
-            return KeyValue.pair(context.timestamp(), PoloWebsockMsg.from(trimmed));
+                PoloWebsockMsg msg = PoloWebsockMsg.from(trimmed.trim());
+                return KeyValue.pair(context.timestamp(), msg);
         }
 
         @Override

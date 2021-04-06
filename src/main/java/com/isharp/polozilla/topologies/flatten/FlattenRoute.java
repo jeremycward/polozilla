@@ -16,6 +16,8 @@ public class FlattenRoute {
                         Consumed.with(Serdes.String(), Serdes.String())
                                 .withTimestampExtractor(new RawRecordTImestampExtractor())
                         )
+
+                .filter((k,v)->(v.length()>50))
                 .transform(new RawDataTransformerSupplier())
 
                 .filter((k,v)->v.getMsgType()==1002)

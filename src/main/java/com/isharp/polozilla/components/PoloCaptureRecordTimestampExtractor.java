@@ -13,7 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PoloCaptureRecordTimestampExtractor implements TimestampExtractor {
-    public static final DateTimeFormatter fmt  = DateTimeFormatter.ofPattern("yyyy-MM-dd:HHmm");
+    public static final DateTimeFormatter fmt  = DateTimeFormatter.ofPattern("yyyy-MM-dd:HHmm:ss");
 
     @Override
     public long extract(ConsumerRecord<Object, Object> record, long partitionTime) {

@@ -5,20 +5,23 @@ import com.google.common.collect.Lists;
 import com.isharp.polozilla.components.PoloCaptureRecordTimestampExtractor;
 import com.isharp.polozilla.components.SampleSpec;
 import com.isharp.polozilla.vo.Capture;
-
-import com.isharp.polozilla.vo.CaptureWindowKey;
 import com.isharp.polozilla.vo.KeyedPoloCaptureWindow;
 import com.isharp.polozilla.vo.PoloCaptureWindow;
-import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.kafka.streams.*;
+import org.apache.kafka.streams.TestInputTopic;
+import org.apache.kafka.streams.TestOutputTopic;
+import org.apache.kafka.streams.Topology;
+import org.apache.kafka.streams.TopologyTestDriver;
 import org.apache.kafka.streams.test.TestRecord;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 
@@ -49,7 +52,7 @@ public class TopologyTestUtil {
         mockProps.put("bootstrap.servers", "DUMMY_KAFKA_CONFLUENT_CLOUD_9092");
         mockProps.put("default.topic.replication.factor", "1");
         mockProps.put("offset.reset.policy", "latest");
-        mockProps.put(AbstractKafkaAvroSerDeConfig.AUTO_REGISTER_SCHEMAS, true);
+        //mockProps.put(AbstractKafkaAvroSerDeConfig.AUTO_REGISTER_SCHEMAS, true);
         return new TopologyTestDriver(top,mockProps,startTime.toInstant(ZoneOffset.UTC));
     }
 
@@ -224,8 +227,6 @@ public class TopologyTestUtil {
                 executor.submit(poller);
                 cdl.await(timeout.toMillis(), TimeUnit.MILLISECONDS);
                 if (result.size()>= expectedMessages){
-                    Long elapsed = System.currentTimeMillis() - start;
-                    System.out.println("Millis taken: " + elapsed);
                     return result;
 
                 }else{

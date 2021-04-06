@@ -7,6 +7,7 @@ import org.apache.kafka.streams.processor.TimestampExtractor;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -14,13 +15,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class RawRecordTImestampExtractor implements TimestampExtractor {
-    private static final Pattern timePattern = Pattern.compile("([\\d]{4})-([\\d]{2})-([\\d]{2})T([\\d]{2}):([\\d]{2}):([\\d]{2})\\.([\\d]{6}) (UTC)");
+    public static final Pattern timePattern = Pattern.compile("([\\d]{4})-([\\d]{2})-([\\d]{2})T([\\d]{2}):([\\d]{2}):([\\d]{2})\\.([\\d]{3}) (UTC)");
+    private static final DateTimeFormatter dtFmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS zzz").withZone(ZoneId.of("UTC"));
     @Override
     public long extract(ConsumerRecord<Object, Object> record, long partitionTime) {
-        Optional<Instant> fromRecord = timestampFrom((String)record.value());
+        Optional<Instant> fromRecord = timestampFrom((String)record.key());
         if (fromRecord.isPresent()) return fromRecord.get().toEpochMilli();
         return partitionTime;
     }
+    public static String formatDatePrefix(LocalDateTime ld){
+        Instant utcTime = ld.toInstant(ZoneOffset.UTC);
+
+        String formattedTime = dtFmt.format(utcTime);
+        return formattedTime;
+    }
+
 
     public static Optional<Instant> timestampFrom(String str){
         Matcher m = timePattern.matcher(str);

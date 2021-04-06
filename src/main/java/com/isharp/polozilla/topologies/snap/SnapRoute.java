@@ -13,9 +13,6 @@ import org.apache.kafka.streams.kstream.*;
 
 import java.time.Duration;
 
-
-
-
 public class SnapRoute {
     private KTable<Windowed<String>,Snap> aggregatedTable(KStream<String, KeyedPoloCaptureWindow> inputStream,Config cfg){
         TimeWindows tumblingWindow = TimeWindows.of(cfg.getTimeWindow()).grace(cfg.getGracePeriod());
@@ -24,7 +21,7 @@ public class SnapRoute {
                 .windowedBy(tumblingWindow)
                 .aggregate(
                         () -> new Snap(),
-                        (key, value, aggregate) -> aggregate.add(value.getTicker(),value.getCaptureWindow()),
+                        (key, value, aggregate) ->aggregate.add(value.getTicker(),value.getCaptureWindow()),
                         Materialized.with(Serdes.String(),PoloniexSerdes.snap))
                 .suppress(Suppressed.untilWindowCloses(Suppressed.BufferConfig.unbounded().shutDownWhenFull()));
 

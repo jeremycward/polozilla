@@ -108,6 +108,8 @@ public class PoloTick {
         tick.setFrozen(rdr.nextInt() > 0 ? true: false);
         tick.setHighestTradePrcie24hrs(rdr.nextString());
         tick.setLowesstTradePrice24hrs(rdr.nextString());
+        rdr.nextInt();
+        rdr.nextInt();
         return tick;
     }
 }

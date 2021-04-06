@@ -1,9 +1,9 @@
 package com.isharp.polozilla.topologies.flatten;
 
+
 import com.isharp.polozilla.components.PoloniexSerdes;
 import com.isharp.polozilla.topologies.TopologyTestUtil;
 import com.isharp.polozilla.vo.Capture;
-import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.kafka.common.serialization.Serdes;
@@ -11,6 +11,8 @@ import org.apache.kafka.streams.*;
 import org.apache.kafka.streams.test.TestRecord;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -40,7 +42,7 @@ public class FlattenRouteTest {
     List<TestRecord<String,String>> inputRecords;
     TopologyTestDriver driver;
 
-
+    final Logger logger = LoggerFactory.getLogger(FlattenRouteTest.class);
     @Before
     public void setup()throws Exception{
         AtomicInteger  atomicInteger = new AtomicInteger(0);
@@ -48,7 +50,7 @@ public class FlattenRouteTest {
         InputStream str = getClass().getResourceAsStream("/poloniex/tickers.txt");
         Instant currentInstant = TopologyTestUtil.recordBaseTime;
         AtomicInteger recCount = new AtomicInteger(0);
-        raw_inputRecords =IOUtils.readLines(new InputStreamReader(str));
+        raw_inputRecords = IOUtils.readLines(new InputStreamReader(str));
          inputRecords = raw_inputRecords.stream()
                  .map((inputValue)->
                          new TestRecord<String,String>(
@@ -63,7 +65,7 @@ public class FlattenRouteTest {
         mockProps.put("bootstrap.servers", "DUMMY_KAFKA_CONFLUENT_CLOUD_9092");
         mockProps.put("default.topic.replication.factor", "1");
         mockProps.put("offset.reset.policy", "latest");
-        mockProps.put(AbstractKafkaAvroSerDeConfig.AUTO_REGISTER_SCHEMAS, true);
+        //mockProps.put(AbstractKafkaAvroSerDeConfig.AUTO_REGISTER_SCHEMAS, true);
         FlattenRoute flattenRoute = new FlattenRoute();
         Topology underTest = flattenRoute.build(testConfig);
          driver = new TopologyTestDriver(underTest,mockProps, FEB_2_2021_17_30_Instant);
@@ -81,7 +83,7 @@ public class FlattenRouteTest {
 
         List<KeyValue<String,Capture>> values= outputTopic.readKeyValuesToList();
         assertThat(values.size(),is(2));
-        System.out.println(new Date(values.get(0).value.getTimeStamp()));
+        logger.info("{}",new Date(values.get(0).value.getTimeStamp()));
         assertThat(values.get(0).value.getTimeStamp(),equalTo(FEB_2_2021_17_30_Instant.toEpochMilli()));
     }
 

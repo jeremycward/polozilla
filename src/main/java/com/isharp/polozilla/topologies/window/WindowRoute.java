@@ -22,8 +22,6 @@ public class WindowRoute {
         TransformerSupplier<Windowed<String>, PoloCaptureWindow, KeyValue<String, KeyedPoloCaptureWindow>> keyedTransformerSupplier =
         new KeyedPoloCaptureWindowTransformerSupplier();
 
-
-
         KStream<String, Capture> captureEvents =
                 builder.stream(cfg.getInputTopic(), captureConsumerOptions);
 
