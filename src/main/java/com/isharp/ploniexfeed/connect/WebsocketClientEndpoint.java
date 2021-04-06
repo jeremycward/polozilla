@@ -53,6 +53,11 @@ public class WebsocketClientEndpoint {
     @Qualifier("tickers_window_secs")
     Topology window_secs;
 
+    @Value(value = "${kafka.bootstrapAddress}")
+    private String bootstrapAddress;
+
+
+
     @Autowired
     @Qualifier("tickers_window_mins")
     Topology window_mins;
@@ -69,7 +74,9 @@ public class WebsocketClientEndpoint {
     @PostConstruct
     public void startSubscription(){
         Properties kafkaSystemConfig = new Properties();
-        kafkaSystemConfig.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "confluent:29092");
+        kafkaSystemConfig.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG,   bootstrapAddress);
+        private String bootstrapAddress;
+);
         kafkaSystemConfig.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
         kafkaSystemConfig.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 
